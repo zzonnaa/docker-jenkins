@@ -1,23 +1,68 @@
 pipeline{
-    agent any
-    stages{
-        stage('Build'){
-            steps{
-                bat 'docker build -t devdocker .'
-            }
-        }
-        stage('Run'){
-            steps{
-                bat 'docker run -d -p 5000:5000 devdocker'
-            }
-        }
-    }
-    post{
-    success{
-      echo 'Build, test, packaging JAR successful'
-    }
-    failure{
-      echo 'JAR packaging failed'
-    }
-  }
+	agent any
+	stages{
+	stage('checkout'){
+	steps{
+	echo "Cloning repo"
+	git url:"pipeline{
+	agent any
+	stages{
+	stage('checkout'){
+	steps{
+	echo "Cloning repo"
+	git url:"https://github.com/zzonnaa/docker-jenkins.git",
+	branch:'main'
+	}
+	}
+	stage('Build'){
+	steps{
+	echo "Build Docker Image"
+	bat "docker build -t mywebapp ."
+	}
+	}
+	stage('Run'){
+	steps{
+	echo "Run application in Docker Container"
+	bat "docker rm -f mycontainer || exit 0"
+	bat "docker run -d -p 5001:5001 --name mycontainer mywebapp"
+	}
+	}
+	}
+	post{
+	success{
+	echo 'Pipeline completed successfully!'
+	}
+	failure{
+	echo 'Pipeline failed.Please check the logs'
+	}
+	
+	}
+}
+",
+	branch:'master'
+	}
+	}
+	stage('Build'){
+	steps{
+	echo "Build Docker Image"
+	bat "docker build -t mywebapp ."
+	}
+	}
+	stage('Run'){
+	steps{
+	echo "Run application in Docker Container"
+	bat "docker rm -f mycontainer || exit 0"
+	bat "docker run -d -p 5001:5001 --name mycontainer mywebapp"
+	}
+	}
+	}
+	post{
+	success{
+	echo 'Pipeline completed successfully!'
+	}
+	failure{
+	echo 'Pipeline failed.Please check the logs'
+	}
+	
+	}
 }
